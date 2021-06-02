@@ -15,6 +15,11 @@
     "service": {
         "name_key": "domain"
     },
+    "module": {
+        "row": "GenericDomain.module_row",
+        "rows": "GenericDomain.module_row_plural",
+        "row_key": "name"
+    },
     "email_tags": {
         "module": [],
         "package": [],

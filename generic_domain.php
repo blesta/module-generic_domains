@@ -23,6 +23,47 @@ class GenericDomain extends RegistrarModule
     }
 
     /**
+     * Performs any necessary bootstraping actions. Sets Input errors on
+     * failure, preventing the module from being added.
+     *
+     * @return array A numerically indexed array of meta data containing:
+     *
+     *  - key The key for this meta field
+     *  - value The value for this key
+     *  - encrypted Whether or not this field should be encrypted (default 0, not encrypted)
+     */
+    public function install()
+    {
+        Loader::loadModels($this, ['ModuleManager']);
+        Loader::loadComponents($this, ['Record']);
+
+        try {
+            $this->Record->begin();
+
+            // Get the ID that this module will have after installation
+            $table_status = $this->Record->query('SHOW TABLE STATUS LIKE "modules"')->fetch();
+            $module_id = isset($table_status->auto_increment) ? $table_status->auto_increment : null;
+
+            // Add module row
+            $this->Record->insert('module_rows', ['module_id' => $module_id]);
+            $module_row_id = $this->Record->lastInsertId();
+
+            // Add module row meta
+            $vars = ['name' => 'Generic Module Row'];
+            $module_row_meta = $this->addModuleRow($vars);
+
+            foreach ($module_row_meta as $row_meta) {
+                $row_meta = array_merge($row_meta, ['module_row_id' => $module_row_id]);
+                $this->Record->insert('module_row_meta', $row_meta);
+            }
+
+            $this->Record->commit();
+        } catch (PDOException $e) {
+            $this->Record->rollback();
+        }
+    }
+
+    /**
      * Returns the rendered view of the manage module page
      *
      * @param mixed $module A stdClass object representing the module and its rows
