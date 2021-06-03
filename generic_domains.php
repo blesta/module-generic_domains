@@ -37,29 +37,21 @@ class GenericDomains extends RegistrarModule
         Loader::loadModels($this, ['ModuleManager']);
         Loader::loadComponents($this, ['Record']);
 
-        try {
-            $this->Record->begin();
+        // Get the ID that this module will have after installation
+        $table_status = $this->Record->query('SHOW TABLE STATUS LIKE "modules"')->fetch();
+        $module_id = isset($table_status->auto_increment) ? $table_status->auto_increment : 1;
 
-            // Get the ID that this module will have after installation
-            $table_status = $this->Record->query('SHOW TABLE STATUS LIKE "modules"')->fetch();
-            $module_id = isset($table_status->auto_increment) ? $table_status->auto_increment : null;
+        // Add module row
+        $this->Record->insert('module_rows', ['module_id' => $module_id]);
+        $module_row_id = $this->Record->lastInsertId();
 
-            // Add module row
-            $this->Record->insert('module_rows', ['module_id' => $module_id]);
-            $module_row_id = $this->Record->lastInsertId();
+        // Add module row meta
+        $vars = ['name' => 'Generic Module Row'];
+        $module_row_meta = $this->addModuleRow($vars);
 
-            // Add module row meta
-            $vars = ['name' => 'Generic Module Row'];
-            $module_row_meta = $this->addModuleRow($vars);
-
-            foreach ($module_row_meta as $row_meta) {
-                $row_meta = array_merge($row_meta, ['module_row_id' => $module_row_id]);
-                $this->Record->insert('module_row_meta', $row_meta);
-            }
-
-            $this->Record->commit();
-        } catch (PDOException $e) {
-            $this->Record->rollback();
+        foreach ($module_row_meta as $row_meta) {
+            $row_meta = array_merge($row_meta, ['module_row_id' => $module_row_id]);
+            $this->Record->insert('module_row_meta', $row_meta);
         }
     }
 
