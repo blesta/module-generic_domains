@@ -1,8 +1,8 @@
 {
     "version": "1.0.0",
     "type": "registrar",
-    "name": "GenericDomain.name",
-    "description": "GenericDomain.description",
+    "name": "GenericDomains.name",
+    "description": "GenericDomains.description",
     "authors": [
         {
             "name": "Phillips Data, Inc.",
@@ -16,8 +16,8 @@
         "name_key": "domain"
     },
     "module": {
-        "row": "GenericDomain.module_row",
-        "rows": "GenericDomain.module_row_plural",
+        "row": "GenericDomains.module_row",
+        "rows": "GenericDomains.module_row_plural",
         "row_key": "name"
     },
     "email_tags": {

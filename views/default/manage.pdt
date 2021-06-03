@@ -5,7 +5,7 @@
         <div class="inner">
             <div class="empty_section">
                 <div class="empty_box">
-                    <?php $this->_('GenericDomain.manage.text');?>
+                    <?php $this->_('GenericDomains.manage.text');?>
                 </div>
             </div>
         </div>

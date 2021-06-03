@@ -1,6 +1,6 @@
 {
-  "name": "blesta/generic_domain",
-  "description": "Generic Domain",
+  "name": "blesta/generic_domains",
+  "description": "Generic Domains",
   "license": "proprietary",
   "type": "blesta-module",
   "require": {

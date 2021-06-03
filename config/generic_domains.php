@@ -1,6 +1,6 @@
 <?php
 // Email templates
-Configure::set('GenericDomain.email_templates', [
+Configure::set('GenericDomains.email_templates', [
     'en_us' => [
         'lang' => 'en_us',
         'text' => 'Your new domain is being processed and will be registered soon!

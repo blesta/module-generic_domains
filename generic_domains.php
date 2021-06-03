@@ -1,14 +1,14 @@
 <?php
 /**
- * Generic Domain Registrar Module
+ * Generic Domains Registrar Module
  *
  * @package blesta
- * @subpackage blesta.components.modules.generic_domain
+ * @subpackage blesta.components.modules.generic_domains
  * @copyright Copyright (c) 2021, Phillips Data, Inc.
  * @license http://www.blesta.com/license/ The Blesta License Agreement
  * @link http://www.blesta.com/ Blesta
  */
-class GenericDomain extends RegistrarModule
+class GenericDomains extends RegistrarModule
 {
     /**
      * Initializes the module
@@ -16,7 +16,7 @@ class GenericDomain extends RegistrarModule
     public function __construct()
     {
         // Load the language required by this module
-        Language::loadLang('generic_domain', null, dirname(__FILE__) . DS . 'language' . DS);
+        Language::loadLang('generic_domains', null, dirname(__FILE__) . DS . 'language' . DS);
 
         // Load module config
         $this->loadConfig(dirname(__FILE__) . DS . 'config.json');
@@ -76,7 +76,7 @@ class GenericDomain extends RegistrarModule
         // Load the view into this object, so helpers can be automatically added to the view
         $this->view = new View('manage', 'default');
         $this->view->base_uri = $this->base_uri;
-        $this->view->setDefaultView('components' . DS . 'modules' . DS . 'generic_domain' . DS);
+        $this->view->setDefaultView('components' . DS . 'modules' . DS . 'generic_domains' . DS);
 
         // Load the helpers required for this view
         Loader::loadHelpers($this, ['Html', 'Widget']);
