@@ -145,6 +145,66 @@ class GenericDomains extends RegistrarModule
     }
 
     /**
+     * Returns all fields to display to an admin attempting to add a service with the module.
+     *
+     * @param stdClass $package A stdClass object representing the selected package
+     * @param $vars stdClass A stdClass object representing a set of post fields
+     * @return ModuleFields A ModuleFields object, containing the fields to render
+     *  as well as any additional HTML markup to include
+     */
+    public function getAdminAddFields($package, $vars = null)
+    {
+        Loader::loadHelpers($this, ['Html']);
+
+        $fields = new ModuleFields();
+
+        // Create domain label
+        $domain = $fields->label(Language::_('GenericDomains.service_field.domain', true), 'domain');
+        // Create domain field and attach to domain label
+        $domain->attach(
+            $fields->fieldText(
+                'domain',
+                ($vars->domain ?? null),
+                ['id' => 'domain']
+            )
+        );
+        // Set the label as a field
+        $fields->setField($domain);
+
+        return $fields;
+    }
+
+    /**
+     * Returns all fields to display to an admin attempting to edit a service with the module.
+     *
+     * @param stdClass $package A stdClass object representing the selected package
+     * @param $vars stdClass A stdClass object representing a set of post fields
+     * @return ModuleFields A ModuleFields object, containing the fields to render as
+     *  well as any additional HTML markup to include
+     */
+    public function getAdminEditFields($package, $vars = null)
+    {
+        Loader::loadHelpers($this, ['Html']);
+
+        $fields = new ModuleFields();
+
+        // Create domain label
+        $domain = $fields->label(Language::_('GenericDomains.service_field.domain', true), 'domain');
+        // Create domain field and attach to domain label
+        $domain->attach(
+            $fields->fieldText(
+                'domain',
+                ($vars->domain ?? null),
+                ['id' => 'domain']
+            )
+        );
+        // Set the label as a field
+        $fields->setField($domain);
+
+        return $fields;
+    }
+
+    /**
      * Verifies that the provided domain name is available
      *
      * @param string $domain The domain to lookup
