@@ -9,8 +9,6 @@ $lang['GenericDomains.description'] = 'A generic module for domain registration.
 $lang['GenericDomains.module_row'] = 'Module Row';
 $lang['GenericDomains.module_row_plural'] = 'Module Rows';
 
-$lang['GenericDomains.service_field.domain'] = 'Domain';
-
 $lang['GenericDomains.domain.domain'] = 'Domain';
 
 $lang['GenericDomains.transfer.domain'] = 'Domain';
