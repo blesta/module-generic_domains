@@ -155,24 +155,9 @@ class GenericDomains extends RegistrarModule
      */
     public function getAdminAddFields($package, $vars = null)
     {
-        Loader::loadHelpers($this, ['Html']);
+        $fields = Configure::get('GenericDomains.domain_fields');
 
-        $fields = new ModuleFields();
-
-        // Create domain label
-        $domain = $fields->label(Language::_('GenericDomains.service_field.domain', true), 'domain');
-        // Create domain field and attach to domain label
-        $domain->attach(
-            $fields->fieldText(
-                'domain',
-                ($vars->domain ?? null),
-                ['id' => 'domain']
-            )
-        );
-        // Set the label as a field
-        $fields->setField($domain);
-
-        return $fields;
+        return $this->arrayToModuleFields($fields, null, $vars);
     }
 
     /**
@@ -185,24 +170,9 @@ class GenericDomains extends RegistrarModule
      */
     public function getAdminEditFields($package, $vars = null)
     {
-        Loader::loadHelpers($this, ['Html']);
+        $fields = Configure::get('GenericDomains.transfer_fields');
 
-        $fields = new ModuleFields();
-
-        // Create domain label
-        $domain = $fields->label(Language::_('GenericDomains.service_field.domain', true), 'domain');
-        // Create domain field and attach to domain label
-        $domain->attach(
-            $fields->fieldText(
-                'domain',
-                ($vars->domain ?? null),
-                ['id' => 'domain']
-            )
-        );
-        // Set the label as a field
-        $fields->setField($domain);
-
-        return $fields;
+        return $this->arrayToModuleFields($fields, null, $vars);
     }
 
     /**
