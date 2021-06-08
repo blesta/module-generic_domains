@@ -13,3 +13,23 @@ Thank you for your business!',
 <p>Thank you for your business!</p>'
     ]
 ]);
+
+// Transfer fields
+Configure::set('GenericDomains.transfer_fields', [
+    'domain' => [
+        'label' => Language::_('GenericDomains.transfer.domain', true),
+        'type' => 'text'
+    ],
+    'transfer_key' => [
+        'label' => Language::_('GenericDomains.transfer.transfer_key', true),
+        'type' => 'text'
+    ]
+]);
+
+// Domain fields
+Configure::set('GenericDomains.domain_fields', [
+    'domain' => [
+        'label' => Language::_('GenericDomains.domain.domain', true),
+        'type' => 'text'
+    ],
+]);

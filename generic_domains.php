@@ -20,6 +20,7 @@ class GenericDomains extends RegistrarModule
 
         // Load module config
         $this->loadConfig(dirname(__FILE__) . DS . 'config.json');
+        Configure::load('generic_domains', dirname(__FILE__) . DS . 'config' . DS);
     }
 
     /**
@@ -142,6 +143,74 @@ class GenericDomains extends RegistrarModule
     public function editService($package, $service, array $vars = [], $parent_package = null, $parent_service = null)
     {
         return $this->addService($package, $vars, $parent_package, $parent_service);
+    }
+
+    /**
+     * Returns all fields to display to an admin attempting to add a service with the module.
+     *
+     * @param stdClass $package A stdClass object representing the selected package
+     * @param $vars stdClass A stdClass object representing a set of post fields
+     * @return ModuleFields A ModuleFields object, containing the fields to render
+     *  as well as any additional HTML markup to include
+     */
+    public function getAdminAddFields($package, $vars = null)
+    {
+        // Handle transfer request
+        if (isset($vars->transfer) || isset($vars->transfer_key)) {
+            $fields = Configure::get('GenericDomains.transfer_fields');
+        } else {
+            $fields = Configure::get('GenericDomains.domain_fields');
+        }
+
+        return $this->arrayToModuleFields($fields, null, $vars);
+    }
+
+    /**
+     * Returns all fields to display to an admin attempting to edit a service with the module.
+     *
+     * @param stdClass $package A stdClass object representing the selected package
+     * @param $vars stdClass A stdClass object representing a set of post fields
+     * @return ModuleFields A ModuleFields object, containing the fields to render as
+     *  well as any additional HTML markup to include
+     */
+    public function getAdminEditFields($package, $vars = null)
+    {
+        $fields = Configure::get('GenericDomains.transfer_fields');
+
+        return $this->arrayToModuleFields($fields, null, $vars);
+    }
+
+    /**
+     * Returns all fields to display to an admin attempting to add a service with the module.
+     *
+     * @param stdClass $package A stdClass object representing the selected package
+     * @param $vars stdClass A stdClass object representing a set of post fields
+     * @return ModuleFields A ModuleFields object, containing the fields to render
+     *  as well as any additional HTML markup to include
+     */
+    public function getClientAddFields($package, $vars = null)
+    {
+        // Handle transfer request
+        if (isset($vars->transfer) || isset($vars->transfer_key)) {
+            $fields = Configure::get('GenericDomains.transfer_fields');
+
+            // We should already have the domain name don't make editable
+            $fields['domain']['type'] = 'hidden';
+            $fields['domain']['label'] = null;
+
+            return $this->arrayToModuleFields($fields, null, $vars);
+        } else {
+            // Handle domain registration
+            $fields = Configure::get('GenericDomains.domain_fields');
+
+            // We should already have the domain name don't make editable
+            $fields['domain']['type'] = 'hidden';
+            $fields['domain']['label'] = null;
+
+            $module_fields = $this->arrayToModuleFields($fields, null, $vars);
+
+            return $module_fields;
+        }
     }
 
     /**
