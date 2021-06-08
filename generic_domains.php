@@ -155,7 +155,12 @@ class GenericDomains extends RegistrarModule
      */
     public function getAdminAddFields($package, $vars = null)
     {
-        $fields = Configure::get('GenericDomains.domain_fields');
+        // Handle transfer request
+        if (isset($vars->transfer) || isset($vars->transfer_key)) {
+            $fields = Configure::get('GenericDomains.transfer_fields');
+        } else {
+            $fields = Configure::get('GenericDomains.domain_fields');
+        }
 
         return $this->arrayToModuleFields($fields, null, $vars);
     }
