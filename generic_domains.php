@@ -214,6 +214,42 @@ class GenericDomains extends RegistrarModule
     }
 
     /**
+     * Returns all fields used when adding/editing a package, including any
+     * javascript to execute when the page is rendered with these fields.
+     *
+     * @param $vars stdClass A stdClass object representing a set of post fields
+     * @return ModuleFields A ModuleFields object, containing the fields to render
+     *  as well as any additional HTML markup to include
+     */
+    public function getPackageFields($vars = null)
+    {
+        Loader::loadHelpers($this, ['Html']);
+
+        $fields = new ModuleFields();
+
+        // Set all TLD checkboxes
+        $tld_options = $fields->label(Language::_('GenericDomains.package_fields.tld_options', true));
+
+        $tlds = $this->getTlds();
+        sort($tlds);
+        foreach ($tlds as $tld) {
+            $tld_label = $fields->label($tld, 'tld_' . $tld);
+            $tld_options->attach(
+                $fields->fieldCheckbox(
+                    'meta[tlds][]',
+                    $tld,
+                    (isset($vars->meta['tlds']) && in_array($tld, $vars->meta['tlds'])),
+                    ['id' => 'tld_' . $tld],
+                    $tld_label
+                )
+            );
+        }
+        $fields->setField($tld_options);
+
+        return $fields;
+    }
+
+    /**
      * Verifies that the provided domain name is available
      *
      * @param string $domain The domain to lookup
@@ -233,5 +269,16 @@ class GenericDomains extends RegistrarModule
         }
 
         return true;
+    }
+
+    /**
+     * Get a list of the TLDs supported by the registrar module
+     *
+     * @param int $module_row_id The ID of the module row to fetch for the current module
+     * @return array A list of all TLDs supported by the registrar module
+     */
+    public function getTlds($module_row_id = null)
+    {
+        return Configure::get('GenericDomains.tlds');
     }
 }
