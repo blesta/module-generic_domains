@@ -111,12 +111,15 @@ class GenericDomains extends RegistrarModule
     )
     {
         $meta = [];
+        $fields = ['domain', 'transfer_key'];
         foreach ($vars as $key => $value) {
-            $meta[] = [
-                'key' => $key,
-                'value' => $value,
-                'encrypted' => 0
-            ];
+            if (in_array($key, $fields)) {
+                $meta[] = [
+                    'key' => $key,
+                    'value' => $value,
+                    'encrypted' => 0
+                ];
+            }
         }
 
         return $meta;
@@ -142,7 +145,29 @@ class GenericDomains extends RegistrarModule
      */
     public function editService($package, $service, array $vars = [], $parent_package = null, $parent_service = null)
     {
-        return $this->addService($package, $vars, $parent_package, $parent_service);
+        // Get current service fields
+        $service_fields = isset($service->fields) ? $this->serviceFieldsToObject($service->fields) : [];
+
+        // Update submitted service fields
+        $fields = ['domain', 'transfer_key'];
+        foreach ($fields as $field) {
+            if (property_exists($service_fields, $field) && isset($vars[$field])) {
+                $service_fields->{$field} = $vars[$field];
+            }
+        }
+
+        return [
+            [
+                'key' => 'domain',
+                'value' => isset($service_fields->domain) ? $service_fields->domain : '',
+                'encrypted' => 0
+            ],
+            [
+                'key' => 'tranfer_key',
+                'value' => isset($service_fields->tranfer_key) ? $service_fields->tranfer_key : '',
+                'encrypted' => 0
+            ],
+        ];
     }
 
     /**
