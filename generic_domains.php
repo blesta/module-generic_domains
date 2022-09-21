@@ -146,7 +146,7 @@ class GenericDomains extends RegistrarModule
     public function editService($package, $service, array $vars = [], $parent_package = null, $parent_service = null)
     {
         // Get current service fields
-        $service_fields = isset($service->fields) ? $this->serviceFieldsToObject($service->fields) : [];
+        $service_fields = isset($service->fields) ? $this->serviceFieldsToObject($service->fields) : (object) [];
 
         // Update submitted service fields
         $fields = ['domain', 'transfer_key'];
