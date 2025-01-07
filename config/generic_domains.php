@@ -165,6 +165,7 @@ Configure::set('GenericDomains.tlds', [
     '.cn',
     '.co',
     '.uk.co',
+    '.co.uk',
     '.coach',
     '.codes',
     '.coffee',
