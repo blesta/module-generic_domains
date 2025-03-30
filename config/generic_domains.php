@@ -34,7 +34,27 @@ Configure::set('GenericDomains.domain_fields', [
     ],
 ]);
 
-// All available TLDs
+/**
+ * All available TLDs
+ * 
+ * Generated from the Public Suffix List (PSL) ICANN section, excluding private section
+ * https://publicsuffix.org/list/
+ * PSL VERSION: 2025-03-28_19-52-32_UTC
+ * PSL COMMIT: b39e35ef3835c5db7aaf311c179fc1f6d92b92d5
+ * 
+ * The following domains from PSL private section were added manually:
+ * - .is-a.dev
+ * - .is-a-good.dev
+ * - .js.org
+ * - .localcert.net
+ * - .ngo.us
+ * - .nyc.mn
+ * - .open-domains.net
+ * - .prvcy.page, .16-b.it, .32-b.it, .64-b.it, .pride.moe, .pride.ngo
+ * - .pp.ua
+ * - .us.kg
+ * - .zone.id
+ */
 Configure::set('GenericDomains.tlds', [
     '.',
     '.0.bg',
@@ -4278,7 +4298,6 @@ Configure::set('GenericDomains.tlds', [
     '.obi',
     '.obihiro.hokkaido.jp',
     '.obira.hokkaido.jp',
-    '.obl.ong',
     '.observer',
     '.obu.aichi.jp',
     '.obuse.nagano.jp',
