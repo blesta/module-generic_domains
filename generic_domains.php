@@ -21,6 +21,9 @@ class GenericDomains extends RegistrarModule
         // Load module config
         $this->loadConfig(dirname(__FILE__) . DS . 'config.json');
         Configure::load('generic_domains', dirname(__FILE__) . DS . 'config' . DS);
+
+        // Load components
+        Loader::loadComponents($this, ['Date']);
     }
 
     /**
@@ -294,6 +297,93 @@ class GenericDomains extends RegistrarModule
         }
 
         return true;
+    }
+
+    /**
+     * Gets the domain registration date
+     *
+     * @param stdClass $service The service belonging to the domain to lookup
+     * @param string $format The format to return the registration date in
+     * @return string The domain registration date in UTC time in the given format
+     * @see Services::get()
+     */
+    public function getRegistrationDate($service, $format = 'Y-m-d H:i:s')
+    {
+        if (class_exists('\Iodev\Whois\Factory')) {
+            $whois = \Iodev\Whois\Factory::get()->createWhois();
+
+            try {
+                // Fetch service domain
+                $domain = $this->getServiceDomain($service);
+
+                // Fetch domain info
+                $info = $whois->loadDomainInfo($domain)->getData();
+
+                // Fetch creation date from WHOIS information
+                if (isset($info['creationDate'])) {
+                    return $this->Date->format($format, $info['creationDate']);
+                }
+
+                return $this->Date->format($format, strtotime($service->date_added));
+            } catch (Exception $e) {
+                return true;
+            }
+        }
+
+        return parent::getRegistrationDate($service, $format);
+    }
+
+    /**
+     * Gets the domain expiration date
+     *
+     * @param stdClass $service The service belonging to the domain to lookup
+     * @param string $format The format to return the expiration date in
+     * @return string The domain expiration date in UTC time in the given format
+     * @see Services::get()
+     */
+    public function getExpirationDate($service, $format = 'Y-m-d H:i:s')
+    {
+        if (class_exists('\Iodev\Whois\Factory')) {
+            $whois = \Iodev\Whois\Factory::get()->createWhois();
+
+            try {
+                // Fetch service domain
+                $domain = $this->getServiceDomain($service);
+
+                // Fetch domain info
+                $info = $whois->loadDomainInfo($domain)->getData();
+
+                // Fetch expiration date from WHOIS information
+                if (isset($info['expirationDate'])) {
+                    return $this->Date->format($format, $info['expirationDate']);
+                }
+
+                return $this->Date->format($format, strtotime($service->date_renews));
+            } catch (Exception $e) {
+                return true;
+            }
+        }
+
+        return parent::getExpirationDate($service, $format);
+    }
+
+    /**
+     * Gets the domain name from the given service
+     *
+     * @param stdClass $service The service from which to extract the domain name
+     * @return string The domain name associated with the service
+     */
+    public function getServiceDomain($service)
+    {
+        if (isset($service->fields)) {
+            foreach ($service->fields as $service_field) {
+                if ($service_field->key == 'domain') {
+                    return $service_field->value;
+                }
+            }
+        }
+
+        return $this->getServiceName($service);
     }
 
     /**
