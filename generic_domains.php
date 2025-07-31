@@ -317,7 +317,12 @@ class GenericDomains extends RegistrarModule
                 $domain = $this->getServiceDomain($service);
 
                 // Fetch domain info
-                $info = $whois->loadDomainInfo($domain)->getData();
+                $domain_info = $whois->loadDomainInfo($domain);
+
+                $info = [];
+                if (!empty($domain_info)) {
+                    $info = $domain_info->getData();
+                }
 
                 // Fetch creation date from WHOIS information
                 if (isset($info['creationDate'])) {
@@ -325,8 +330,8 @@ class GenericDomains extends RegistrarModule
                 }
 
                 return $this->Date->format($format, strtotime($service->date_added));
-            } catch (Exception $e) {
-                return true;
+            } catch (Throwable $e) {
+                // Nothing to do
             }
         }
 
@@ -351,7 +356,12 @@ class GenericDomains extends RegistrarModule
                 $domain = $this->getServiceDomain($service);
 
                 // Fetch domain info
-                $info = $whois->loadDomainInfo($domain)->getData();
+                $domain_info = $whois->loadDomainInfo($domain);
+
+                $info = [];
+                if (!empty($domain_info)) {
+                    $info = $domain_info->getData();
+                }
 
                 // Fetch expiration date from WHOIS information
                 if (isset($info['expirationDate'])) {
@@ -359,8 +369,8 @@ class GenericDomains extends RegistrarModule
                 }
 
                 return $this->Date->format($format, strtotime($service->date_renews));
-            } catch (Exception $e) {
-                return true;
+            } catch (Throwable $e) {
+                // Nothing to do
             }
         }
 
