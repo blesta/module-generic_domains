@@ -29,7 +29,7 @@
                             $this->Form->label($this->_("GenericDomains.manage.registration_email", true));
                             ?>
                             <div class="title_row first">
-                                <h3>{service.domain}, {service.tranfer_key}, {client.first_name}, {client.last_name}, {client.email}, {client.id_code}</h3>
+                                <h3>{service.domain}, {service.transfer_key}, {client.first_name}, {client.last_name}, {client.email}, {client.id_code}</h3>
                             </div>
                             <div class="tab_content">
                                 <ul class="tabs">
@@ -51,7 +51,7 @@
                             $this->Form->label($this->_("GenericDomains.manage.renewal_email", true));
                             ?>
                             <div class="title_row first">
-                                <h3>{service.domain}, {service.tranfer_key}, {client.first_name}, {client.last_name}, {client.email}, {client.id_code}</h3>
+                                <h3>{service.domain}, {service.transfer_key}, {client.first_name}, {client.last_name}, {client.email}, {client.id_code}</h3>
                             </div>
                             <div class="tab_content">
                                 <ul class="tabs">
