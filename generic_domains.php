@@ -60,6 +60,61 @@ class GenericDomains extends RegistrarModule
     }
 
     /**
+     * Performs migration of data from $current_version (the current installed version)
+     * to the given file set version. Sets Input errors on failure, preventing
+     * the module from being upgraded.
+     *
+     * @param string $current_version The current installed version of this module
+     */
+    public function upgrade($current_version)
+    {
+        // Upgrade to 1.3.0
+        if (version_compare($current_version, '1.3.0', '<')) {
+            Loader::loadModels($this, ['Emails', 'Staff']);
+            Loader::loadComponents($this, ['Record']);
+
+            // Fetch "From" email from "service_creation_error" email template
+            $service_creation_error_template = $this->Emails->getByType(
+                Configure::get('Blesta.company_id'),
+                'service_creation_error'
+            );
+
+            // Set default email templates
+            $email_templates = Configure::get('GenericDomains.email_templates');
+
+            // Fetch all module instances
+            $modules = $this->Record->select('modules.*')
+                ->from('modules')
+                ->where('modules.class', '=', Loader::fromCamelCase(get_class($this)))
+                ->fetchAll();
+
+            foreach ($modules as $module) {
+                // Get first staff member for the current company
+                $staff_members = $this->Staff->getAll($module->company_id, 'active');
+                $staff = reset($staff_members);
+
+                $meta = [
+                    'from_email' => $service_creation_error_template->from ?? '',
+                    'to_emails' => $staff->email ?? '',
+                    'registration_email_html' => $email_templates['registration']['html'] ?? '',
+                    'registration_email_text' => $email_templates['registration']['text'] ?? '',
+                    'renewal_email_html' => $email_templates['renewal']['html'] ?? '',
+                    'renewal_email_text' => $email_templates['renewal']['text'] ?? ''
+                ];
+                foreach ($meta as $key => $value) {
+                    $row = [
+                        'module_id' => $module->id,
+                        'key' => $key,
+                        'value' => $value
+                    ];
+                    $this->Record->duplicate('value', '=', $value)
+                        ->insert('module_meta', $row);
+                }
+            }
+        }
+    }
+
+    /**
      * Returns the rendered view of the manage module page
      *
      * @param mixed $module A stdClass object representing the module and its rows
@@ -75,8 +130,22 @@ class GenericDomains extends RegistrarModule
         $this->view->setDefaultView('components' . DS . 'modules' . DS . 'generic_domains' . DS);
 
         // Load the helpers required for this view
-        Loader::loadHelpers($this, ['Html', 'Widget']);
+        Loader::loadHelpers($this, ['Html', 'Widget', 'Form', 'Javascript']);
 
+        // Format vars
+        $params = (array) $module->meta;
+        if (!empty($_POST)) {
+            $params = $vars;
+            $vars = [];
+            foreach ($params as $key => $value) {
+                $vars[] = [
+                    'key' => $key,
+                    'value' => $value
+                ];
+            }
+        }
+
+        $this->view->set('vars', (object) $params);
         $this->view->set('module', $module);
 
         return $this->view->fetch();
@@ -113,6 +182,8 @@ class GenericDomains extends RegistrarModule
         $status = 'pending'
     )
     {
+        Loader::loadModels($this, ['Emails', 'Clients']);
+
         $meta = [];
         $fields = ['domain', 'transfer_key'];
         foreach ($vars as $key => $value) {
@@ -123,6 +194,36 @@ class GenericDomains extends RegistrarModule
                     'encrypted' => 0
                 ];
             }
+        }
+
+        // Get module
+        $module = $this->getModule();
+
+        // Send domain registration email
+        $to_addresses = str_contains($module->meta->to_emails ?? '', ',')
+            ? explode(',', $module->meta->to_emails)
+            : [$module->meta->to_emails];
+        foreach ($to_addresses as &$address) {
+            $address = trim($address);
+        }
+
+        $tags = [
+            'service' => (object) $vars,
+            'client' => $this->Clients->get($vars['client_id'] ?? null)
+        ];
+
+        if (!empty($to_addresses)) {
+            $this->Emails->sendCustom(
+                $module->meta->from_email ?? '',
+                $module->name ?? '',
+                $to_addresses,
+                $module->name ?? '',
+                [
+                    'html' => $module->meta->registration_email_html ?? '',
+                    'text' => $module->meta->registration_email_text ?? ''
+                ],
+                $tags
+            );
         }
 
         return $meta;
@@ -171,6 +272,64 @@ class GenericDomains extends RegistrarModule
                 'encrypted' => 0
             ],
         ];
+    }
+
+    /**
+     * Allows the module to perform an action when the service is ready to renew.
+     * Sets Input errors on failure, preventing the service from renewing.
+     *
+     * @param stdClass $package A stdClass object representing the current package
+     * @param stdClass $service A stdClass object representing the current service
+     * @param stdClass $parent_package A stdClass object representing the parent
+     *  service's selected package (if the current service is an addon service)
+     * @param stdClass $parent_service A stdClass object representing the parent
+     *  service of the service being renewed (if the current service is an addon service)
+     * @return mixed null to maintain the existing meta fields or a numerically
+     *  indexed array of meta fields to be stored for this service containing:
+     *  - key The key for this meta field
+     *  - value The value for this key
+     *  - encrypted Whether or not this field should be encrypted (default 0, not encrypted)
+     * @see Module::getModule()
+     * @see Module::getModuleRow()
+     */
+    public function renewService($package, $service, $parent_package = null, $parent_service = null)
+    {
+        Loader::loadModels($this, ['Emails', 'Clients']);
+
+        // Get module
+        $module = $this->getModule();
+
+        // Get current service fields
+        $service_fields = isset($service->fields) ? $this->serviceFieldsToObject($service->fields) : (object) [];
+
+        // Send domain registration email
+        $to_addresses = str_contains($module->meta->to_emails ?? '', ',')
+            ? explode(',', $module->meta->to_emails)
+            : [$module->meta->to_emails];
+        foreach ($to_addresses as &$address) {
+            $address = trim($address);
+        }
+
+        $tags = [
+            'service' => $service_fields,
+            'client' => $this->Clients->get($service->client_id ?? null)
+        ];
+
+        if (!empty($to_addresses)) {
+            $this->Emails->sendCustom(
+                $module->meta->from_email ?? '',
+                $module->name ?? '',
+                $to_addresses,
+                $module->name ?? '',
+                [
+                    'html' => $module->meta->renewal_email_html ?? '',
+                    'text' => $module->meta->renewal_email_text ?? ''
+                ],
+                $tags
+            );
+        }
+
+        return null;
     }
 
     /**

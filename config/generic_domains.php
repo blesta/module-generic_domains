@@ -11,6 +11,20 @@ Thank you for your business!',
         'html' => '<p>Your new domain is being processed and will be registered soon!</p>
 <p>Domain: {service.domain}</p>
 <p>Thank you for your business!</p>'
+    ],
+    'registration' => [
+        'text' => 'A new domain has been registered by {client.first_name} {client.last_name} ({client.email}).
+
+Domain: {service.domain}',
+        'html' => '<p>A new domain has been registered by {client.first_name} {client.last_name} ({client.email}).</p>
+<p>Domain: {service.domain}</p>'
+    ],
+    'renewal' => [
+        'text' => 'An existing domain has been renewed by {client.first_name} {client.last_name} ({client.email}).
+
+Domain: {service.domain}',
+        'html' => '<p>An existing domain has been renewed by {client.first_name} {client.last_name} ({client.email}).</p>
+<p>Domain: {service.domain}</p>'
     ]
 ]);
 
