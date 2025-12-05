@@ -202,7 +202,7 @@ class GenericDomains extends RegistrarModule
         // Send domain registration email
         $to_addresses = str_contains($module->meta->to_emails ?? '', ',')
             ? explode(',', $module->meta->to_emails)
-            : [$module->meta->to_emails];
+            : [$module->meta->to_emails ?? ''];
         foreach ($to_addresses as &$address) {
             $address = trim($address);
         }
@@ -484,7 +484,7 @@ class GenericDomains extends RegistrarModule
                 }
 
                 // Fetch creation date from WHOIS information
-                if (isset($info['creationDate'])) {
+                if (!empty($info['creationDate'])) {
                     return $this->Date->format($format, $info['creationDate']);
                 }
 
@@ -523,7 +523,7 @@ class GenericDomains extends RegistrarModule
                 }
 
                 // Fetch expiration date from WHOIS information
-                if (isset($info['expirationDate'])) {
+                if (!empty($info['expirationDate'])) {
                     return $this->Date->format($format, $info['expirationDate']);
                 }
 
