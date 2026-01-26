@@ -1,9 +1,17 @@
 {
-  "name": "blesta/generic_domains",
-  "description": "Generic Domains",
-  "license": "proprietary",
-  "type": "blesta-module",
-  "require": {
-      "blesta/composer-installer": "~1.0"
-  }
+    "name": "blesta/generic_domains",
+    "description": "Generic Domains",
+    "license": "proprietary",
+    "type": "blesta-module",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    },
+    "extra": {
+        "patches": {
+            "io-developer/php-whois": {
+                "CORE-5619: Add CLST/CLT timezone support for .cl domains": "patches/php-whois-clst-timezone.patch",
+                "CORE-5619: Configure .cl TLD to use commonFlat parser": "patches/php-whois-cl-parser.patch"
+            }
+        }
+    }
 }
