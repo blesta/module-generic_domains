@@ -1,0 +1,10 @@
+--- a/src/Iodev/Whois/Configs/module.tld.servers.json
++++ b/src/Iodev/Whois/Configs/module.tld.servers.json
+@@ -222,7 +222,7 @@
+   {"zone": ".citic", "host": "whois.nic.citic"},
+   {"zone": ".city", "host": "whois.nic.city"},
+   {"zone": ".cityeats", "host": "whois.nic.cityeats"},
+-  {"zone": ".cl", "host": "whois.nic.cl"},
++  {"zone": ".cl", "host": "whois.nic.cl", "parserType": "commonFlat"},
+   {"zone": ".claims", "host": "whois.nic.claims"},
+   {"zone": ".cleaning", "host": "whois.nic.cleaning"},
