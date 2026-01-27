@@ -10,7 +10,8 @@
         "patches": {
             "io-developer/php-whois": {
                 "CORE-5619: Add CLST/CLT timezone support for .cl domains": "components/modules/generic_domains/patches/php-whois-clst-timezone.patch",
-                "CORE-5619: Configure .cl TLD to use commonFlat parser": "components/modules/generic_domains/patches/php-whois-cl-parser.patch"
+                "CORE-5619: Configure .cl TLD to use commonFlat parser": "components/modules/generic_domains/patches/php-whois-cl-parser.patch",
+                "CORE-5619: Relax TldInfo validation to allow responses without domainName": "components/modules/generic_domains/patches/php-whois-tldinfo-validation.patch"
             }
         }
     }
