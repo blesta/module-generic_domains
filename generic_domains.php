@@ -483,8 +483,6 @@ class GenericDomains extends RegistrarModule
                 if (!empty($info['creationDate'])) {
                     return $this->Date->format($format, $info['creationDate']);
                 }
-
-                return $this->Date->format($format, strtotime($service->date_added));
             } catch (Throwable $e) {
                 // Nothing to do
             }
@@ -522,8 +520,6 @@ class GenericDomains extends RegistrarModule
                 if (!empty($info['expirationDate'])) {
                     return $this->Date->format($format, $info['expirationDate']);
                 }
-
-                return $this->Date->format($format, strtotime($service->date_renews));
             } catch (Throwable $e) {
                 // Nothing to do
             }

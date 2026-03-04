@@ -1,0 +1,11 @@
+--- a/src/Iodev/Whois/Modules/Tld/TldInfo.php
++++ b/src/Iodev/Whois/Modules/Tld/TldInfo.php
+@@ -122,7 +122,7 @@ class TldInfo extends DataObject
+         if (!empty($badFirstStatesDict[$firstState])) {
+             return false;
+         }
+-        $primaryKeys = ['domainName'];
++        $primaryKeys = [];
+         $secondaryKeys = [
+             "states",
+             "nameServers",
