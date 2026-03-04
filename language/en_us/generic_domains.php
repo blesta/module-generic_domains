@@ -4,6 +4,9 @@
  */
 
 $lang['GenericDomains.name'] = 'Generic Domains';
+
+$lang['Generic_domains.back_to_manage'] = 'Back';
+
 $lang['GenericDomains.description'] = 'A generic module for domain registration.';
 
 $lang['GenericDomains.!tooltip.to_emails'] = 'All the recipient emails, separated by comma.';
