@@ -30,3 +30,4 @@ $lang['GenericDomains.manage.email_html'] = 'HTML';
 $lang['GenericDomains.manage.email_text'] = 'Text';
 $lang['GenericDomains.manage.save_btn'] = 'Save';
 $lang['GenericDomains.manage.text'] = 'Staff may receive BCC copies of service creation, suspension and cancellation emails if their staff group has these BCC notices set, and the staff member subscribes to them under their [My Info] -> [Notices] section.';
+$lang['GenericDomains.manage.text_available_tags'] = 'Available Tags';
