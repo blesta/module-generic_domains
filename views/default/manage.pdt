@@ -1,6 +1,5 @@
 <?php /** @var View $this **/ ?>
 
-<div class="main-content-padding">
 <?php
 $this->Widget->clear();
 $this->Widget->create(
@@ -10,11 +9,11 @@ $this->Widget->create(
         isset($module->name) ? $this->Html->safe($module->name) : null,
     ),
 );
-?>
-    <?php $this->Form->create(); ?>
-    <h6 class="form-section-header first"><?php $this->_('GenericDomains.manage.notification_settings_title'); ?></h6>
 
-    <div class="row g-3 mb-4">
+$this->Form->create();
+?>
+    <h6 class="form-section-header"><?php $this->_('GenericDomains.manage.notification_settings_title'); ?></h6>
+    <div class="row g-3 mb-3">
         <div class="col-md-6">
             <?php $this->Form->label($this->_('GenericDomains.manage.from_email', true), 'from_email', ['class' => 'form-label']); ?>
             <?php $this->Form->fieldText('from_email', $vars->from_email ?? '', ['id' => 'from_email', 'class' => 'form-control']); ?>
@@ -30,7 +29,6 @@ $this->Widget->create(
     </div>
 
     <h6 class="form-section-header"><?php $this->Form->label($this->_('GenericDomains.manage.registration_email', true)); ?></h6>
-
     <div class="alert alert-info mb-3">
         <h6 class="alert-heading mb-2"><i class="bi bi-tags me-2"></i><?php $this->_('GenericDomains.manage.text_available_tags');?></h6>
         <div class="d-flex flex-wrap gap-2 mt-2">
@@ -64,9 +62,8 @@ $this->Widget->create(
         </div>
     </div>
 
-    <h6 class="form-section-header mt-4"><?php $this->Form->label($this->_('GenericDomains.manage.renewal_email', true)); ?></h6>
-
-    <div class="alert alert-info">
+    <h6 class="form-section-header"><?php $this->Form->label($this->_('GenericDomains.manage.renewal_email', true)); ?></h6>
+    <div class="alert alert-info mb-3">
         <h6 class="alert-heading mb-2"><i class="bi bi-tags me-2"></i><?php $this->_('GenericDomains.manage.text_available_tags');?></h6>
         <div class="d-flex flex-wrap gap-2 mt-2">
             <code>{service.domain}</code>
@@ -103,9 +100,10 @@ $this->Widget->create(
     <div class="d-flex gap-2 justify-content-end">
         <?php $this->Form->fieldSubmit('save', $this->_('GenericDomains.manage.save_btn', true), ['class' => 'btn btn-primary']); ?>
     </div>
-    <?php $this->Form->end(); ?>
-<?php $this->Widget->end(); ?>
-</div>
+<?php
+$this->Form->end();
+$this->Widget->end();
+?>
 
 <script type="text/javascript" src="<?php echo VENDORWEBDIR . 'blesta/ckeditor/build/ckeditor.js'; ?>"></script>
 <script>
