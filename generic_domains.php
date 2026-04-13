@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Generic Domains Registrar Module
  *
@@ -43,7 +44,7 @@ class GenericDomains extends RegistrarModule
 
         // Get the ID that this module will have after installation
         $table_status = $this->Record->query('SHOW TABLE STATUS LIKE "modules"')->fetch();
-        $module_id = isset($table_status->auto_increment) ? $table_status->auto_increment : 1;
+        $module_id = $table_status->auto_increment ?? 1;
 
         // Add module row
         $this->Record->insert('module_rows', ['module_id' => $module_id]);
@@ -180,8 +181,7 @@ class GenericDomains extends RegistrarModule
         $parent_package = null,
         $parent_service = null,
         $status = 'pending'
-    )
-    {
+    ) {
         Loader::loadModels($this, ['Emails', 'Clients']);
 
         $meta = [];
@@ -263,12 +263,12 @@ class GenericDomains extends RegistrarModule
         return [
             [
                 'key' => 'domain',
-                'value' => isset($service_fields->domain) ? $service_fields->domain : '',
+                'value' => $service_fields->domain ?? '',
                 'encrypted' => 0
             ],
             [
                 'key' => 'tranfer_key',
-                'value' => isset($service_fields->tranfer_key) ? $service_fields->tranfer_key : '',
+                'value' => $service_fields->tranfer_key ?? '',
                 'encrypted' => 0
             ],
         ];
@@ -343,11 +343,7 @@ class GenericDomains extends RegistrarModule
     public function getAdminAddFields($package, $vars = null)
     {
         // Handle transfer request
-        if (isset($vars->transfer) || isset($vars->transfer_key)) {
-            $fields = Configure::get('GenericDomains.transfer_fields');
-        } else {
-            $fields = Configure::get('GenericDomains.domain_fields');
-        }
+        $fields = isset($vars->transfer) || isset($vars->transfer_key) ? Configure::get('GenericDomains.transfer_fields') : Configure::get('GenericDomains.domain_fields');
 
         return $this->arrayToModuleFields($fields, null, $vars);
     }
@@ -450,7 +446,7 @@ class GenericDomains extends RegistrarModule
 
             try {
                 return $whois->isDomainAvailable($domain);
-            } catch (Exception $e) {
+            } catch (\Throwable $e) {
                 return true;
             }
         }

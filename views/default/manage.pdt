@@ -1,89 +1,123 @@
-        <?php
-        $this->Widget->clear();
-        $this->Widget->create($this->_('AdminCompanyModules.manage.boxtitle_manage', true, (isset($module->name) ? $this->Html->safe($module->name) : null)), ['id' => 'manage_none']);
-        ?>
-        <div class="inner">
-            <?php
-            $this->Form->create();
-            ?>
-                <div class="title_row first">
-                    <h3><?php $this->_('GenericDomains.manage.notification_settings_title');?></h3>
-                </div>
-                <div class="pad">
-                    <ul>
-                        <li>
-                            <?php
-                            $this->Form->label($this->_("GenericDomains.manage.from_email", true), 'from_email');
-                            $this->Form->fieldText('from_email', ($vars->from_email ?? ''), ['id' => 'from_email']);
-                            ?>
-                        </li>
-                        <li>
-                            <?php
-                            $this->Form->label($this->_("GenericDomains.manage.to_emails", true), 'to_emails');
-                            $this->Form->fieldText('to_emails', ($vars->to_emails ?? ''), ['id' => 'to_emails']);
-                            ?>
-                            <span class="tooltip"><?php $this->_("AppController.tooltip.text");?><div><?php $this->_("GenericDomains.!tooltip.to_emails");?></div></span>
-                        </li>
-                        <li>
-                            <?php
-                            $this->Form->label($this->_("GenericDomains.manage.registration_email", true));
-                            ?>
-                            <div class="title_row first">
-                                <h3>{service.domain}, {service.transfer_key}, {client.first_name}, {client.last_name}, {client.email}, {client.id_code}</h3>
-                            </div>
-                            <div class="tab_content">
-                                <ul class="tabs">
-                                    <li class="current">
-                                        <a href="#"><?php $this->Form->label($this->_('GenericDomains.manage.email_html', true), 'registration_email_html');?></a>
-                                    </li>
-                                    <li>
-                                        <a href="#"><?php $this->Form->label($this->_('GenericDomains.manage.email_text', true), 'registration_email_text');?></a>
-                                    </li>
-                                </ul>
-                                <div class="inner_content">
-                                    <div><?php $this->Form->fieldTextarea('registration_email_html', ($vars->registration_email_html ?? null), ['class' => 'wysiwyg', 'id' => 'registration_email_html']);?></div>
-                                    <div><?php $this->Form->fieldTextarea('registration_email_text', ($vars->registration_email_text ?? null), ['id' => 'registration_email_text']);?></div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <?php
-                            $this->Form->label($this->_("GenericDomains.manage.renewal_email", true));
-                            ?>
-                            <div class="title_row first">
-                                <h3>{service.domain}, {service.transfer_key}, {client.first_name}, {client.last_name}, {client.email}, {client.id_code}</h3>
-                            </div>
-                            <div class="tab_content">
-                                <ul class="tabs">
-                                    <li class="current">
-                                        <a href="#"><?php $this->Form->label($this->_('GenericDomains.manage.email_html', true), 'renewal_email_html');?></a>
-                                    </li>
-                                    <li>
-                                        <a href="#"><?php $this->Form->label($this->_('GenericDomains.manage.email_text', true), 'renewal_email_text');?></a>
-                                    </li>
-                                </ul>
-                                <div class="inner_content">
-                                    <div><?php $this->Form->fieldTextarea('renewal_email_html', ($vars->renewal_email_html ?? null), ['class' => 'wysiwyg', 'id' => 'renewal_email_html']);?></div>
-                                    <div><?php $this->Form->fieldTextarea('renewal_email_text', ($vars->renewal_email_text ?? null), ['id' => 'renewal_email_text']);?></div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+<?php /** @var View $this **/ ?>
 
-                <div class="button_row"><a class="btn btn-primary pull-right submit" href="#"><?php $this->_("GenericDomains.manage.save_btn");?></a></div>
-            <?php
-            $this->Form->end();
-            ?>
+<?php
+$this->Widget->clear();
+$this->Widget->create(
+    $this->_(
+        'AdminCompanyModules.manage.boxtitle_manage',
+        true,
+        isset($module->name) ? $this->Html->safe($module->name) : null,
+    ),
+);
+
+$this->Form->create();
+?>
+    <h6 class="form-section-header"><?php $this->_('GenericDomains.manage.notification_settings_title'); ?></h6>
+    <div class="row g-3 mb-3">
+        <div class="col-md-6">
+            <?php $this->Form->label($this->_('GenericDomains.manage.from_email', true), 'from_email', ['class' => 'form-label']); ?>
+            <?php $this->Form->fieldText('from_email', $vars->from_email ?? '', ['id' => 'from_email', 'class' => 'form-control']); ?>
         </div>
-        <?php
-        $this->Widget->end();
-        ?>
+        <div class="col-md-6">
+            <?php $this->Form->label($this->_('GenericDomains.manage.to_emails', true), 'to_emails', ['class' => 'form-label']); ?>
+            <i class="bi bi-info-circle ms-1"
+               data-bs-toggle="tooltip"
+               data-bs-placement="top"
+               title="<?php echo $this->Html->safe($this->_('GenericDomains.!tooltip.to_emails', true));?>"></i>
+            <?php $this->Form->fieldText('to_emails', $vars->to_emails ?? '', ['id' => 'to_emails', 'class' => 'form-control']); ?>
+        </div>
+    </div>
 
-        <script type="text/javascript" src="<?php echo VENDORWEBDIR . 'blesta/ckeditor/build/ckeditor.js';?>"></script>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('.wysiwyg').blestaBindWysiwygEditor({language: '<?php echo substr(Configure::get('Blesta.language'), 0, 2);?>'});
-                $('.tab_content').blestaTabbedContent();
-            });
-        </script>
+    <h6 class="form-section-header"><?php $this->Form->label($this->_('GenericDomains.manage.registration_email', true)); ?></h6>
+    <div class="alert alert-info mb-3">
+        <h6 class="alert-heading mb-2"><i class="bi bi-tags me-2"></i><?php $this->_('GenericDomains.manage.text_available_tags');?></h6>
+        <div class="d-flex flex-wrap gap-2 mt-2">
+            <code>{service.domain}</code>
+            <code>{service.transfer_key}</code>
+            <code>{client.first_name}</code>
+            <code>{client.last_name}</code>
+            <code>{client.email}</code>
+            <code>{client.id_code}</code>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs-connected" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="registration-html-tab" data-bs-toggle="tab" data-bs-target="#registration-email-html" type="button" role="tab">
+                <?php $this->_('GenericDomains.manage.email_html'); ?>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="registration-text-tab" data-bs-toggle="tab" data-bs-target="#registration-email-text" type="button" role="tab">
+                <?php $this->_('GenericDomains.manage.email_text'); ?>
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content tab-content-connected">
+        <div class="tab-pane fade show active" id="registration-email-html" role="tabpanel">
+            <textarea id="registration_email_html" name="registration_email_html"><?php echo $vars->registration_email_html ?? '';?></textarea>
+        </div>
+        <div class="tab-pane fade" id="registration-email-text" role="tabpanel">
+            <?php $this->Form->fieldTextarea('registration_email_text', $vars->registration_email_text ?? '', ['id' => 'registration_email_text', 'class' => 'form-control', 'rows' => 15]); ?>
+        </div>
+    </div>
+
+    <h6 class="form-section-header"><?php $this->Form->label($this->_('GenericDomains.manage.renewal_email', true)); ?></h6>
+    <div class="alert alert-info mb-3">
+        <h6 class="alert-heading mb-2"><i class="bi bi-tags me-2"></i><?php $this->_('GenericDomains.manage.text_available_tags');?></h6>
+        <div class="d-flex flex-wrap gap-2 mt-2">
+            <code>{service.domain}</code>
+            <code>{service.transfer_key}</code>
+            <code>{client.first_name}</code>
+            <code>{client.last_name}</code>
+            <code>{client.email}</code>
+            <code>{client.id_code}</code>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs-connected" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="renewal-html-tab" data-bs-toggle="tab" data-bs-target="#renewal-email-html" type="button" role="tab">
+                <?php $this->_('GenericDomains.manage.email_html'); ?>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="renewal-text-tab" data-bs-toggle="tab" data-bs-target="#renewal-email-text" type="button" role="tab">
+                <?php $this->_('GenericDomains.manage.email_text'); ?>
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content tab-content-connected">
+        <div class="tab-pane fade show active" id="renewal-email-html" role="tabpanel">
+            <textarea id="renewal_email_html" name="renewal_email_html"><?php echo $vars->renewal_email_html ?? '';?></textarea>
+        </div>
+        <div class="tab-pane fade" id="renewal-email-text" role="tabpanel">
+            <?php $this->Form->fieldTextarea('renewal_email_text', $vars->renewal_email_text ?? '', ['id' => 'renewal_email_text', 'class' => 'form-control', 'rows' => 15]); ?>
+        </div>
+    </div>
+
+    <?php $this->Widget->footer(); ?>
+    <div class="d-flex gap-2 justify-content-end">
+        <?php $this->Form->fieldSubmit('save', $this->_('GenericDomains.manage.save_btn', true), ['class' => 'btn btn-primary']); ?>
+    </div>
+<?php
+$this->Form->end();
+$this->Widget->end();
+?>
+
+<script type="text/javascript" src="<?php echo VENDORWEBDIR . 'blesta/ckeditor/build/ckeditor.js'; ?>"></script>
+<script>
+    // Initialize wysiwyg editors
+    blestaBindWysiwygEditor('#registration_email_html', {
+        language: '<?php echo substr(Configure::get('Blesta.language'), 0, 2);?>'
+    });
+    blestaBindWysiwygEditor('#renewal_email_html', {
+        language: '<?php echo substr(Configure::get('Blesta.language'), 0, 2);?>'
+    });
+
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    });
+</script>

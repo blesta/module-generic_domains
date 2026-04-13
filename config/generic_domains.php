@@ -1,4 +1,5 @@
 <?php
+
 // Email templates
 Configure::set('GenericDomains.email_templates', [
     'en_us' => [
